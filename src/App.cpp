@@ -29,7 +29,6 @@
 #include "core/config/Config.h"
 #include "core/Controller.h"
 #include "Summary.h"
-#include "version.h"
 
 
 xmrig::App::App(Process *process)

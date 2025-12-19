@@ -26,7 +26,6 @@ set(HEADERS
     src/core/Controller.h
     src/donate.h
     src/net/JobResult.h
-    src/net/strategies/DonateStrategy.h
     src/proxy/BindHost.h
     src/proxy/Counters.h
     src/proxy/CustomDiff.h
@@ -50,8 +49,6 @@ set(HEADERS
     src/proxy/Proxy.h
     src/proxy/ProxyDebug.h
     src/proxy/Server.h
-    src/proxy/splitters/donate/DonateMapper.h
-    src/proxy/splitters/donate/DonateSplitter.h
     src/proxy/splitters/extra_nonce/ExtraNonceMapper.h
     src/proxy/splitters/extra_nonce/ExtraNonceSplitter.h
     src/proxy/splitters/extra_nonce/ExtraNonceStorage.h
@@ -78,7 +75,6 @@ set(SOURCES
     src/core/config/ConfigTransform.cpp
     src/core/Controller.cpp
     src/net/JobResult.cpp
-    src/net/strategies/DonateStrategy.cpp
     src/proxy/BindHost.cpp
     src/proxy/Counters.cpp
     src/proxy/CustomDiff.cpp
@@ -95,8 +91,6 @@ set(SOURCES
     src/proxy/Proxy.cpp
     src/proxy/ProxyDebug.cpp
     src/proxy/Server.cpp
-    src/proxy/splitters/donate/DonateMapper.cpp
-    src/proxy/splitters/donate/DonateSplitter.cpp
     src/proxy/splitters/extra_nonce/ExtraNonceMapper.cpp
     src/proxy/splitters/extra_nonce/ExtraNonceSplitter.cpp
     src/proxy/splitters/extra_nonce/ExtraNonceStorage.cpp

@@ -27,14 +27,12 @@
 #endif
 
 #include <cinttypes>
-#include <memory>
 #include <ctime>
 
 
 #include "proxy/Proxy.h"
 #include "base/io/log/Log.h"
 #include "base/io/log/Tags.h"
-#include "base/tools/Handle.h"
 #include "base/tools/Timer.h"
 #include "core/config/Config.h"
 #include "core/Controller.h"
@@ -42,13 +40,11 @@
 #include "log/AccessLog.h"
 #include "log/ShareLog.h"
 #include "proxy/Events.h"
-#include "proxy/events/ConnectionEvent.h"
 #include "proxy/Login.h"
 #include "proxy/Miner.h"
 #include "proxy/Miners.h"
 #include "proxy/ProxyDebug.h"
 #include "proxy/Server.h"
-#include "proxy/splitters/donate/DonateSplitter.h"
 #include "proxy/splitters/extra_nonce/ExtraNonceSplitter.h"
 #include "proxy/splitters/nicehash/NonceSplitter.h"
 #include "proxy/splitters/simple/SimpleSplitter.h"
@@ -90,7 +86,6 @@ xmrig::Proxy::Proxy(Controller *controller) :
     }
 
     m_splitter  = splitter;
-    m_donate    = new DonateSplitter(controller);
     m_stats     = new Stats(controller);
     m_shareLog  = new ShareLog(controller, m_stats);
     m_accessLog = new AccessLog(controller);
@@ -107,21 +102,18 @@ xmrig::Proxy::Proxy(Controller *controller) :
     Events::subscribe(IEvent::ConnectionType, m_stats);
 
     Events::subscribe(IEvent::CloseType, m_miners);
-    Events::subscribe(IEvent::CloseType, m_donate);
     Events::subscribe(IEvent::CloseType, splitter);
     Events::subscribe(IEvent::CloseType, m_stats);
     Events::subscribe(IEvent::CloseType, m_accessLog);
     Events::subscribe(IEvent::CloseType, m_workers);
 
     Events::subscribe(IEvent::LoginType, m_login);
-    Events::subscribe(IEvent::LoginType, m_donate);
     Events::subscribe(IEvent::LoginType, &m_customDiff);
     Events::subscribe(IEvent::LoginType, splitter);
     Events::subscribe(IEvent::LoginType, m_stats);
     Events::subscribe(IEvent::LoginType, m_accessLog);
     Events::subscribe(IEvent::LoginType, m_workers);
 
-    Events::subscribe(IEvent::SubmitType, m_donate);
     Events::subscribe(IEvent::SubmitType, splitter);
     Events::subscribe(IEvent::SubmitType, m_stats);
     Events::subscribe(IEvent::SubmitType, m_workers);
@@ -150,7 +142,6 @@ xmrig::Proxy::~Proxy()
     delete m_api;
 #   endif
 
-    delete m_donate;
     delete m_login;
     delete m_miners;
     delete m_splitter;
