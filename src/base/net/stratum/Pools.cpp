@@ -29,7 +29,6 @@
 #include "base/kernel/interfaces/IJsonReader.h"
 #include "base/net/stratum/strategies/FailoverStrategy.h"
 #include "base/net/stratum/strategies/SinglePoolStrategy.h"
-#include "donate.h"
 
 
 #ifdef XMRIG_FEATURE_BENCHMARK
@@ -40,7 +39,6 @@
 namespace xmrig {
 
 
-const char *Pools::kDonateLevel     = "donate-level";
 const char *Pools::kDonateOverProxy = "donate-over-proxy";
 const char *Pools::kPools           = "pools";
 const char *Pools::kRetries         = "retries";
@@ -50,8 +48,7 @@ const char *Pools::kRetryPause      = "retry-pause";
 } // namespace xmrig
 
 
-xmrig::Pools::Pools() :
-    m_donateLevel(kDefaultDonateLevel)
+xmrig::Pools::Pools()
 {
 #   ifdef XMRIG_PROXY_PROJECT
     m_retries    = 2;
@@ -67,12 +64,6 @@ bool xmrig::Pools::isEqual(const Pools &other) const
     }
 
     return std::equal(m_data.begin(), m_data.end(), other.m_data.begin());
-}
-
-
-int xmrig::Pools::donateLevel() const
-{
-    return 0;
 }
 
 
@@ -154,7 +145,6 @@ void xmrig::Pools::load(const IJsonReader &reader)
         }
     }
 
-    setDonateLevel(reader.getInt(kDonateLevel, kDefaultDonateLevel));
     setProxyDonate(reader.getInt(kDonateOverProxy, PROXY_DONATE_AUTO));
     setRetries(reader.getInt(kRetries));
     setRetryPause(reader.getInt(kRetryPause));
@@ -203,17 +193,10 @@ void xmrig::Pools::toJSON(rapidjson::Value &out, rapidjson::Document &doc) const
     }
 #   endif
 
-    doc.AddMember(StringRef(kDonateLevel),      m_donateLevel, allocator);
     doc.AddMember(StringRef(kDonateOverProxy),  m_proxyDonate, allocator);
     out.AddMember(StringRef(kPools),            toJSON(doc), allocator);
     doc.AddMember(StringRef(kRetries),          retries(), allocator);
     doc.AddMember(StringRef(kRetryPause),       retryPause(), allocator);
-}
-
-
-void xmrig::Pools::setDonateLevel(int level)
-{
-    m_donateLevel = 0;
 }
 
 

@@ -26,7 +26,6 @@
 #include "3rdparty/rapidjson/document.h"
 #include "base/api/interfaces/IApiRequest.h"
 #include "base/kernel/Platform.h"
-#include "base/tools/Buffer.h"
 #include "core/config/Config.h"
 #include "core/Controller.h"
 #include "proxy/Counters.h"
@@ -102,21 +101,13 @@ void xmrig::ApiRouter::getHashrate(rapidjson::Value &reply, rapidjson::Document 
 void xmrig::ApiRouter::getMiner(rapidjson::Value &reply, rapidjson::Document &doc) const
 {
     auto &allocator = doc.GetAllocator();
-    auto &stats = static_cast<Controller *>(m_base)->statsData();
-
     reply.AddMember("version",      APP_VERSION, allocator);
     reply.AddMember("kind",         APP_KIND, allocator);
     reply.AddMember("algo",         "invalid", allocator);
     reply.AddMember("mode",         rapidjson::StringRef(m_base->config()->modeName()), allocator);
     reply.AddMember("ua",           Platform::userAgent().toJSON(), allocator);
-    reply.AddMember("donate_level", m_base->config()->pools().donateLevel(), allocator);
 
-    if (stats.hashes && stats.donateHashes) {
-        reply.AddMember("donated", normalize((double) stats.donateHashes / stats.hashes * 100.0), allocator);
-    }
-    else {
-        reply.AddMember("donated", 0.0, allocator);
-    }
+    reply.AddMember("donated", 0.0, allocator);
 }
 
 
